@@ -4,7 +4,7 @@ import onedrivesdk
 from onedrivesdk.helpers import GetAuthCodeServer
 
 def main():
-    redirect_uri="http://localhost:8080/"
+    redirect_uri = "http://localhost:8080/"
     client_secret = "BqaTYqI0XI7wDKcnJ5i3MvLwGcVsaMVM"
 
     client = onedrivesdk.get_default_client(client_id='00000000481695BB', scopes=['wl.signin', 'wl.offline_access', 'onedrive.readwrite'])
@@ -16,11 +16,11 @@ def main():
 
     root = client.item(id="root").get()
 
-    listItemsInFolder(client, root)
+    listItemsInFolder(client, '', root)
 
 
-def listItemsInFolder(client, folder):
-    folder_name = folder.name + "/"
+def listItemsInFolder(client, parent_folder_name, folder):
+    folder_name = parent_folder_name + (folder.name if parent_folder_name != '' else '') + '/'
 
     items = client.item(id=folder.id).children.get()
 
@@ -28,7 +28,7 @@ def listItemsInFolder(client, folder):
         if item.folder is None:
             print(folder_name + item.name)
         else:
-            listItemsInFolder(client, item)
+            listItemsInFolder(client, folder_name, item)
 
 if __name__ == "__main__":
     main()
